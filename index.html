@@ -1,230 +1,152 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tg">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Дафтари Электронии Беморон</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #f4f7f6; color: #333; padding: 20px; }
-    .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-    h1, h2 { text-align: center; color: #1a5276; margin-bottom: 20px; }
-    
-    /* Шакли ворид кардани рамз */
-    #auth-screen { text-align: center; margin-top: 50px; }
-    #auth-screen input { width: 250px; padding: 12px; font-size: 18px; text-align: center; border: 2px solid #1a5276; border-radius: 8px; margin-bottom: 15px; }
-    
-    /* Танзимоти тугмаҳо */
-    .btn { background-color: #27ae60; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; margin: 5px; transition: 0.3s; }
-    .btn:hover { background-color: #219150; }
-    .btn-danger { background-color: #e74c3c; }
-    .btn-danger:hover { background-color: #c0392b; }
-    .btn-blue { background-color: #2980b9; }
-    .btn-blue:hover { background-color: #1f618d; }
-    
-    /* Форма ва ҷустуҷӯ */
-    .form-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-    .form-group input, .form-group textarea { flex: 1 1 45%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
-    .form-group textarea { flex: 1 1 100%; height: 80px; }
-    .search-box { margin-bottom: 20px; }
-    .search-box input { width: 100%; padding: 12px; border: 2px solid #2980b9; border-radius: 8px; font-size: 16px; }
-    
-    /* Ҷадвали беморон */
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-    th { background-color: #1a5276; color: white; }
-    tr:nth-child(even) { background-color: #f9f9f9; }
-    
-    .hidden { display: none; }
-    .status-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #eef2f5; padding: 10px 15px; border-radius: 6px; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0969e8">
+<title>РАМЗ — МАЪЛУМОТНОМА</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f2f5f9;color:#152238;font-family:Arial,"Noto Sans",sans-serif}
+header{background:linear-gradient(135deg,#0878f9,#0751c5);color:white;padding:22px 14px 27px}
+.wrap{max-width:900px;margin:auto}
+.brand{font-size:23px;font-weight:800}
+.sub{font-size:13px;opacity:.92;margin-top:5px}
+.search{display:flex;gap:8px;margin-top:19px}
+#q{flex:1;padding:15px;border:0;border-radius:13px;font-size:16px;outline:0;min-width:0}
+#go{background:#fff;color:#0759c7;padding:0 16px;font-size:15px;font-weight:800;border:0;border-radius:13px}
+main{padding:14px 12px 35px}
+.stats,.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:11px}
+.stat,.filter{background:#fff;border:1px solid #dfe6ee;border-radius:22px;padding:9px 13px;font-size:13px}
+.filter{cursor:pointer}
+.filter.active{background:#e7f1ff;color:#0759bd;font-weight:800}
+.result{display:none;background:#fff;border-radius:17px;padding:16px;margin-bottom:12px;border:1px solid #dce5f0;box-shadow:0 5px 18px rgba(16,42,67,.08)}
+.code{font-size:31px;color:#0867e8;font-weight:900}
+.desc{font-size:15px;line-height:1.55;margin-top:8px}
+.badge{display:inline-block;margin-top:10px;padding:6px 9px;border-radius:20px;font-size:11px;font-weight:800;background:#eef3f8}
+.list{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:75px minmax(0,1fr) auto;gap:10px;align-items:center;background:#fff;border:1px solid #dfe6ee;border-radius:13px;padding:12px;cursor:pointer}
+.row:hover{border-color:#9fc5ff}
+.row b{color:#0867e8;font-size:16px}
+.row span{font-size:13px;line-height:1.38}
+.row small{font-size:11px;font-weight:800;white-space:nowrap;padding:6px 8px;border-radius:9px}
+.global{border-left:4px solid #0867e8}.global small{color:#0759bd;background:#eef5ff}
+.free{border-left:4px solid #20a34a}.free small{color:#137a35;background:#e9f8ee}
+.k600{border-left:4px solid #f08a24}.k600 small{color:#a64b00;background:#fff1e4}
+.ifa{border-left:4px solid #7b4de0}.ifa small{color:#6336bf;background:#f0ebff}
+.empty{display:none;text-align:center;padding:35px;color:#667085}
+@media(max-width:600px){
+ .brand{font-size:22px}.search{gap:7px}
+ #go{padding:0 13px}.row{grid-template-columns:58px minmax(0,1fr) auto;padding:11px 9px}
+ .row span{font-size:12.5px}.row small{font-size:9px;padding:5px 5px}
+}
+</style>
 </head>
 <body>
-
-<div class="container">
-  
-  <!-- ЭКРАНИ РАМЗ (АВТОРИЗАЦИЯ) -->
-  <div id="auth-screen">
-    <h2>🔒 Дафтари Электронии Беморон</h2>
-    <p style="margin-bottom: 15px;">Лутфан рамзи воридшавиро нависед:</p>
-    <input type="password" id="pass-input" placeholder="Рамзро ворид кунед"><br>
-    <button class="btn btn-blue" onclick="checkPassword()">Ворид шудан</button>
-    <p id="auth-error" style="color: red; margin-top: 10px;"></p>
-  </div>
-
-  <!-- ЭКРАНИ АСОСИИ БАРНОМА -->
-  <div id="app-screen" class="hidden">
-    <div class="status-bar">
-      <span>👤 Лаборатория / Дафтари беморон</span>
-      <div>
-        <button class="btn btn-blue" onclick="exportData()">💾 Сабти маълумот (Backup)</button>
-        <button class="btn btn-blue" onclick="importData()">📂 Бор кардан (Import)</button>
-        <button class="btn btn-danger" onclick="logout()">Баромад</button>
-      </div>
-    </div>
-
-    <!-- ЧӮСТУҶӮ -->
-    <div class="search-box">
-      <input type="text" id="search-input" onkeyup="searchPatients()" placeholder="🔍 Ҷустуҷӯ (аз рӯи ном, сол ё адрес)...">
-    </div>
-
-    <!-- ФОРМАИ НАВИШТАНИ БЕМОРИ НАВ -->
-    <h2>➕ Илова кардани бемори нав</h2>
-    <form id="patient-form" onsubmit="addPatient(event)">
-      <div class="form-group">
-        <input type="text" id="p-name" placeholder="Ном ва Фамилия" required>
-        <input type="number" id="p-year" placeholder="Соли таваллуд" required>
-        <input type="text" id="p-address" placeholder="Адрес / Суроға" required>
-        <input type="text" id="p-phone" placeholder="Телефон">
-        <textarea id="p-notes" placeholder="Таҳлилҳо, нишонаҳо, диагноз ё қайдҳои дигар..."></textarea>
-      </div>
-      <button type="submit" class="btn">Сабт кардан</button>
-    </form>
-
-    <hr style="margin: 25px 0;">
-
-    <!-- РӮЙХАТИ БЕМОРОН -->
-    <h2>📋 Рӯйхати беморон</h2>
-    <div style="overflow-x:auto;">
-      <table id="patient-table">
-        <thead>
-          <tr>
-            <th>Сана</th>
-            <th>Ном ва Фамилия</th>
-            <th>Сол</th>
-            <th>Адрес</th>
-            <th>Телефон</th>
-            <th>Қайдҳо/Таҳлилҳо</th>
-            <th>Амал</th>
-          </tr>
-        </thead>
-        <tbody id="patient-list">
-          <!-- Маълумот дар ин ҷо пайдо мешавад -->
-        </tbody>
-      </table>
-    </div>
-  </div>
-
+<header>
+<div class="wrap">
+<div class="brand">🧪 РАМЗ — МАЪЛУМОТНОМА</div>
+<div class="sub">Ҷустуҷӯи рамзҳо ва табақаи муроҷиаткунандагон</div>
+<div class="search"><input id="q" placeholder="Рамз ё номи беморӣ нависед…"><button id="go">Ҷустуҷӯ</button></div>
 </div>
-
+</header>
+<main class="wrap">
+<div class="stats"><div class="stat">Ҳамагӣ: <b>56</b></div><div class="stat">Натиҷа: <b id="num">56</b></div></div>
+<div class="filters">
+<button class="filter active" data-f="all">Ҳама</button>
+<button class="filter" data-f="global">Глобали</button>
+<button class="filter" data-f="free">РОЙГОН</button>
+<button class="filter" data-f="k600">К 600</button>
+<button class="filter" data-f="ifa">ИФА</button>
+</div>
+<div id="result" class="result"></div>
+<div id="list" class="list"><div class="row global" data-search="101 шахсоне, ки бо мубталоёни внмо/бпнм дар алоқаву тамос буданд, (аз руи нишондодхои эпидемиолги) аз ҷумла: глобали" onclick="showCode('101')"><b>101</b><span>Шахсоне, ки бо мубталоёни ВНМО/БПНМ дар алоқаву тамос буданд, (аз руи нишондодхои эпидемиолги) аз ҷумла:</span><small>Глобали</small></div>
+<div class="row global" data-search="101.1 алоқаи ҷинсӣ глобали" onclick="showCode('101.1')"><b>101.1</b><span>алоқаи ҷинсӣ</span><small>Глобали</small></div>
+<div class="row global" data-search="101.2 истифодаи якҷояи маводи нашъадори тазриқӣ глобали" onclick="showCode('101.2')"><b>101.2</b><span>истифодаи якҷояи маводи нашъадори тазриқӣ</span><small>Глобали</small></div>
+<div class="row global" data-search="101.3 тамоси тиббӣ глобали" onclick="showCode('101.3')"><b>101.3</b><span>тамоси тиббӣ</span><small>Глобали</small></div>
+<div class="row global" data-search="101.4 кӯдакони аз модарони мубталои внмо таваллудшуда глобали" onclick="showCode('101.4')"><b>101.4</b><span>кӯдакони аз модарони мубталои ВНМО таваллудшуда</span><small>Глобали</small></div>
+<div class="row global" data-search="101.5 алоқамандони (волидайн, бародарон, хоҳарон ва ғ.) кӯдакони сироятёфта глобали" onclick="showCode('101.5')"><b>101.5</b><span>Алоқамандони (волидайн, бародарон, хоҳарон ва ғ.) кӯдакони сироятёфта</span><small>Глобали</small></div>
+<div class="row global" data-search="102 нашъамандони тазриқӣ глобали" onclick="showCode('102')"><b>102</b><span>Нашъамандони тазриқӣ</span><small>Глобали</small></div>
+<div class="row global" data-search="103 гомо ва биссексуалҳо глобали" onclick="showCode('103')"><b>103</b><span>Гомо ва биссексуалҳо</span><small>Глобали</small></div>
+<div class="row global" data-search="104 шахсоне, ки ба бемориҳои ҷинсӣ гирифторанд глобали" onclick="showCode('104')"><b>104</b><span>Шахсоне, ки ба бемориҳои ҷинсӣ гирифторанд</span><small>Глобали</small></div>
+<div class="row global" data-search="105 шахсони ба алоқаи ҷинсии бетартибона машғулбуда, аз ҷумла: глобали" onclick="showCode('105')"><b>105</b><span>Шахсони ба алоқаи ҷинсии бетартибона машғулбуда, аз ҷумла:</span><small>Глобали</small></div>
+<div class="row global" data-search="105.1 кормандони тиҷорати шаҳвонӣ глобали" onclick="showCode('105.1')"><b>105.1</b><span>кормандони тиҷорати шаҳвонӣ</span><small>Глобали</small></div>
+<div class="row global" data-search="105.2 мизоҷони кормандони тиҷорати шаҳвонӣ глобали" onclick="showCode('105.2')"><b>105.2</b><span>мизоҷони кормандони тиҷорати шаҳвонӣ</span><small>Глобали</small></div>
+<div class="row global" data-search="106 муҳоҷирони меҳнатӣ, аз ҷумла шахсоне, ки зиёда аз 3 моҳ ба хориҷи кишвар сафар кардаанд глобали" onclick="showCode('106')"><b>106</b><span>Муҳоҷирони меҳнатӣ, аз ҷумла шахсоне, ки зиёда аз 3 моҳ ба хориҷи кишвар сафар кардаанд</span><small>Глобали</small></div>
+<div class="row global" data-search="107 муоинаи тиббии ҳатмии шахсони никоҳшаванда глобали" onclick="showCode('107')"><b>107</b><span>Муоинаи тиббии ҳатмии шахсони никоҳшаванда</span><small>Глобали</small></div>
+<div class="row global" data-search="108 донорони хун, зардоби хун ва дигар моеъҳои биологию бофтаҳо глобали" onclick="showCode('108')"><b>108</b><span>Донорони хун, зардоби хун ва дигар моеъҳои биологию бофтаҳо</span><small>глобали</small></div>
+<div class="row free" data-search="109 ҳомиладорон, аз ҷумла: ройгон" onclick="showCode('109')"><b>109</b><span>ҳомиладорон, аз ҷумла:</span><small>РОЙГОН</small></div>
+<div class="row free" data-search="109.1 заноне, ки якум маротиба аз ташхис гузаштаанд ройгон" onclick="showCode('109.1')"><b>109.1</b><span>заноне, ки якум маротиба аз ташхис гузаштаанд</span><small>РОЙГОН</small></div>
+<div class="row free" data-search="109.2 заноне, ки тибқи шкала дуюм бор аз ташхис гузаштаанд ройгон" onclick="showCode('109.2')"><b>109.2</b><span>заноне, ки тибқи шкала дуюм бор аз ташхис гузаштаанд</span><small>РОЙГОН</small></div>
+<div class="row global" data-search="110 ресипиентҳои хун, зардоби он ва дигар моеъҳои биологию бофтаҳо глобали" onclick="showCode('110')"><b>110</b><span>Ресипиентҳои хун, зардоби он ва дигар моеъҳои биологию бофтаҳо</span><small>Глобали</small></div>
+<div class="row global" data-search="111 кормандони мақомоти қудратӣ ва ба хизмат даъватшудагон глобали" onclick="showCode('111')"><b>111</b><span>Кормандони мақомоти қудратӣ ва ба хизмат даъватшудагон</span><small>Глобали</small></div>
+<div class="row global" data-search="112 шахсоне, ки дар маҳбасхонаҳо муоина шудаанд глобали" onclick="showCode('112')"><b>112</b><span>Шахсоне, ки дар маҳбасхонаҳо муоина шудаанд</span><small>Глобали</small></div>
+<div class="row k600" data-search="113 шахсони аз рўи нишонаҳои клиникӣ муоинашуда, аз ҷумла: к 600" onclick="showCode('113')"><b>113</b><span>Шахсони аз рўи нишонаҳои клиникӣ муоинашуда, аз ҷумла:</span><small>К 600</small></div>
+<div class="row k600" data-search="113.1 таби сабабаш номаълум к 600" onclick="showCode('113.1')"><b>113.1</b><span>таби сабабаш номаълум</span><small>К 600</small></div>
+<div class="row k600" data-search="113.2 дарунравии сабабаш номаълум к 600" onclick="showCode('113.2')"><b>113.2</b><span>дарунравии сабабаш номаълум</span><small>К 600</small></div>
+<div class="row k600" data-search="113.3 калоншавии хаҷми ғадудҳои лимфатикии ду ва аз он зиёд гурӯҳҳо бо давомнокии зиёда аз 1 моҳ к 600" onclick="showCode('113.3')"><b>113.3</b><span>калоншавии хаҷми ғадудҳои лимфатикии ду ва аз он зиёд гурӯҳҳо бо давомнокии зиёда аз 1 моҳ</span><small>К 600</small></div>
+<div class="row k600" data-search="113.4 илтихоби шуши дарозмуддат ва авҷгиранда, тарбоди музмини бронхои бо табобати оддӣ сиҳатнашаванда к 600" onclick="showCode('113.4')"><b>113.4</b><span>илтихоби шуши дарозмуддат ва авҷгиранда, тарбоди музмини бронхои бо табобати оддӣ сиҳатнашаванда</span><small>К 600</small></div>
+<div class="row k600" data-search="113.5 лейкоплакияи мӯйинагии ковокии даҳон к 600" onclick="showCode('113.5')"><b>113.5</b><span>лейкоплакияи мӯйинагии ковокии даҳон</span><small>К 600</small></div>
+<div class="row k600" data-search="113.6 илтихоби авҷгирандаи римноки пӯст к 600" onclick="showCode('113.6')"><b>113.6</b><span>илтихоби авҷгирандаи римноки пӯст</span><small>К 600</small></div>
+<div class="row k600" data-search="113.7 бемориҳои римноки бактериалии авҷгиранда, бемориҳои паразитарӣ, таафуни хусусияти давомнокдошта, ки бо табобати оддӣ сиҳат намешаванд к 600" onclick="showCode('113.7')"><b>113.7</b><span>бемориҳои римноки бактериалии авҷгиранда, бемориҳои паразитарӣ, таафуни хусусияти давомнокдошта, ки бо табобати оддӣ сиҳат намешаванд</span><small>К 600</small></div>
+<div class="row k600" data-search="113.8 энсефалитҳои зершадид ва ноқисулақлӣ дар одамони пештар солимбуда к 600" onclick="showCode('113.8')"><b>113.8</b><span>энсефалитҳои зершадид ва ноқисулақлӣ дар одамони пештар солимбуда</span><small>К 600</small></div>
+<div class="row k600" data-search="113.9 саркомаи капоши (саратон) к 600" onclick="showCode('113.9')"><b>113.9</b><span>саркомаи Капоши (саратон)</span><small>К 600</small></div>
+<div class="row k600" data-search="113.10 лимфомаи мағзи сар к 600" onclick="showCode('113.10')"><b>113.10</b><span>лимфомаи мағзи сар</span><small>К 600</small></div>
+<div class="row global" data-search="113.11 сили шуш ва ғайришушӣ глобали" onclick="showCode('113.11')"><b>113.11</b><span>сили шуш ва ғайришушӣ</span><small>Глобали</small></div>
+<div class="row global" data-search="113.12 зардпарвини с. глобали" onclick="showCode('113.12')"><b>113.12</b><span>зардпарвини С.</span><small>Глобали</small></div>
+<div class="row global" data-search="113.13 зардпарвини в, hbs-ҳомилон ҳангоми гузоштани ташхис ва баъди 6 моҳ глобали" onclick="showCode('113.13')"><b>113.13</b><span>зардпарвини В, HBs-ҳомилон ҳангоми гузоштани ташхис ва баъди 6 моҳ</span><small>Глобали</small></div>
+<div class="row k600" data-search="113.14 сироятҳои ситомегаловирусӣ к 600" onclick="showCode('113.14')"><b>113.14</b><span>сироятҳои ситомегаловирусӣ</span><small>К 600</small></div>
+<div class="row k600" data-search="113.15 шакли музмин ва ё паҳнгардидаи сироят, ки аз вируси оддии герпес ба вуҷуд омадааст к 600" onclick="showCode('113.15')"><b>113.15</b><span>шакли музмин ва ё паҳнгардидаи сироят, ки аз вируси оддии герпес ба вуҷуд омадааст</span><small>К 600</small></div>
+<div class="row k600" data-search="113.16 шукуфаи канорпеч дар шахсони то синни 60 сола к 600" onclick="showCode('113.16')"><b>113.16</b><span>шукуфаи канорпеч дар шахсони то синни 60 сола</span><small>К 600</small></div>
+<div class="row k600" data-search="113.17 мононуклеоз - 3 моҳ баъд аз оғози беморӣ к 600" onclick="showCode('113.17')"><b>113.17</b><span>мононуклеоз - 3 моҳ баъд аз оғози беморӣ</span><small>К 600</small></div>
+<div class="row k600" data-search="113.18 менингоэнсефалити шадиди асептикӣ к 600" onclick="showCode('113.18')"><b>113.18</b><span>менингоэнсефалити шадиди асептикӣ</span><small>К 600</small></div>
+<div class="row k600" data-search="113.19 гулафшони шадиди тромбоситопении сабабаш номаълум к 600" onclick="showCode('113.19')"><b>113.19</b><span>гулафшони шадиди тромбоситопении сабабаш номаълум</span><small>К 600</small></div>
+<div class="row k600" data-search="113.20 пневмосистоз (илтиҳоби шушҳо) к 600" onclick="showCode('113.20')"><b>113.20</b><span>пневмосистоз (илтиҳоби шушҳо)</span><small>К 600</small></div>
+<div class="row k600" data-search="113.21 токсоплазмоз к 600" onclick="showCode('113.21')"><b>113.21</b><span>токсоплазмоз</span><small>К 600</small></div>
+<div class="row k600" data-search="113.22 кандидози сурхрӯда, хирной, бронхҳо ё шушҳо, пардаҳои луобии ковокии даҳону бинӣ ва узвҳои таносул к 600" onclick="showCode('113.22')"><b>113.22</b><span>кандидози сурхрӯда, хирной, бронхҳо ё шушҳо, пардаҳои луобии ковокии даҳону бинӣ ва узвҳои таносул</span><small>К 600</small></div>
+<div class="row k600" data-search="113.23 микозҳои чуқур (гистоплазмоз, стронгилоидоз) к 600" onclick="showCode('113.23')"><b>113.23</b><span>микозҳои чуқур (гистоплазмоз, стронгилоидоз)</span><small>К 600</small></div>
+<div class="row k600" data-search="113.24 лейкоэнсефалопатияи авҷгирандаи бисёрманба к 600" onclick="showCode('113.24')"><b>113.24</b><span>лейкоэнсефалопатияи авҷгирандаи бисёрманба</span><small>К 600</small></div>
+<div class="row k600" data-search="113.25 кам шудани вазн дар хаҷми 10% ва зиёд сабабаш номаълум к 600" onclick="showCode('113.25')"><b>113.25</b><span>кам шудани вазн дар хаҷми 10% ва зиёд сабабаш номаълум</span><small>К 600</small></div>
+<div class="row k600" data-search="113.26 беморон бо лейкопения, лимфопения, тромбоситопения к 600" onclick="showCode('113.26')"><b>113.26</b><span>беморон бо лейкопения, лимфопения, тромбоситопения</span><small>К 600</small></div>
+<div class="row k600" data-search="113.27 бемороне, ки бояд ҷарроҳӣ шаванд к 600" onclick="showCode('113.27')"><b>113.27</b><span>бемороне, ки бояд ҷарроҳӣ шаванд</span><small>К 600</small></div>
+<div class="row k600" data-search="114 шахсони ба таври махфӣ муоинашуда к 600" onclick="showCode('114')"><b>114</b><span>Шахсони ба таври махфӣ муоинашуда</span><small>К 600</small></div>
+<div class="row k600" data-search="117 кӯдакони аз рӯи нишондодҳои клиникӣ муоинашуда к 600" onclick="showCode('117')"><b>117</b><span>Кӯдакони аз рӯи нишондодҳои клиникӣ муоинашуда</span><small>К 600</small></div>
+<div class="row k600" data-search="118 одамони бе ҷои зисти доимӣ к 600" onclick="showCode('118')"><b>118</b><span>Одамони бе ҷои зисти доимӣ</span><small>К 600</small></div>
+<div class="row k600" data-search="119 кормандони роҳи оҳан, меҳмонхонаҳо ва ронандагони сафарҳои байнишаҳрӣ к 600" onclick="showCode('119')"><b>119</b><span>Кормандони роҳи оҳан, меҳмонхонаҳо ва ронандагони сафарҳои байнишаҳрӣ</span><small>К 600</small></div>
+<div class="row ifa" data-search="120 кормандони соҳаи тиб ифа" onclick="showCode('120')"><b>120</b><span>Кормандони соҳаи тиб</span><small>ИФА</small></div>
+<div class="row k600" data-search="121 хонандагони мактабхои миёнаву оли к 600" onclick="showCode('121')"><b>121</b><span>Хонандагони мактабхои миёнаву оли</span><small>К 600</small></div>
+<div class="row k600" data-search="122 худ мурочиат к 600" onclick="showCode('122')"><b>122</b><span>Худ Мурочиат</span><small>К 600</small></div></div>
+<div id="empty" class="empty">Ягон натиҷа ёфт нашуд.</div>
+</main>
 <script>
-  // Рамзи пешфарз: 1234 (метавонед тағйир диҳед)
-  const SECRET_PASS = "1234";
-  let patients = JSON.parse(localStorage.getItem("med_patients")) || [];
-
-  function checkPassword() {
-    const input = document.getElementById("pass-input").value;
-    if (input === SECRET_PASS) {
-      document.getElementById("auth-screen").classList.add("hidden");
-      document.getElementById("app-screen").classList.remove("hidden");
-      renderPatients();
-    } else {
-      document.getElementById("auth-error").innerText = "Рамз нодуруст аст!";
-    }
-  }
-
-  function logout() {
-    document.getElementById("auth-screen").classList.remove("hidden");
-    document.getElementById("app-screen").classList.add("hidden");
-    document.getElementById("pass-input").value = "";
-  }
-
-  function addPatient(e) {
-    e.preventDefault();
-    const newPatient = {
-      id: Date.now(),
-      date: new Date().toLocaleDateString('ru-RU'),
-      name: document.getElementById("p-name").value,
-      year: document.getElementById("p-year").value,
-      address: document.getElementById("p-address").value,
-      phone: document.getElementById("p-phone").value,
-      notes: document.getElementById("p-notes").value
-    };
-
-    patients.unshift(newPatient);
-    saveData();
-    renderPatients();
-    document.getElementById("patient-form").reset();
-  }
-
-  function saveData() {
-    localStorage.setItem("med_patients", JSON.stringify(patients));
-  }
-
-  function renderPatients(dataToRender = patients) {
-    const list = document.getElementById("patient-list");
-    list.innerHTML = "";
-
-    if (dataToRender.length === 0) {
-      list.innerHTML = "<tr><td colspan='7' style='text-align:center;'>Ҳеҷ бемор ёфт нашуд</td></tr>";
-      return;
-    }
-
-    dataToRender.forEach(p => {
-      const row = `<tr>
-        <td>${p.date}</td>
-        <td><b>${p.name}</b></td>
-        <td>${p.year}</td>
-        <td>${p.address}</td>
-        <td>${p.phone || '-'}</td>
-        <td>${p.notes || '-'}</td>
-        <td><button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="deletePatient(${p.id})">Ўчириш</button></td>
-      </tr>`;
-      list.innerHTML += row;
-    });
-  }
-
-  function deletePatient(id) {
-    if (confirm("Оё мехоҳед ин беморро аз рӯйхат озод/пок кунед?")) {
-      patients = patients.filter(p => p.id !== id);
-      saveData();
-      renderPatients();
-    }
-  }
-
-  function searchPatients() {
-    const query = document.getElementById("search-input").value.toLowerCase();
-    const filtered = patients.filter(p => 
-      p.name.toLowerCase().includes(query) ||
-      p.address.toLowerCase().includes(query) ||
-      p.year.toString().includes(query) ||
-      p.notes.toLowerCase().includes(query)
-    );
-    renderPatients(filtered);
-  }
-
-  function exportData() {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(patients));
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", "patients_backup.json");
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-  }
-
-  function importData() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.onchange = e => {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.readAsText(file, 'UTF-8');
-      reader.onload = readerEvent => {
-        const content = readerEvent.target.result;
-        try {
-          patients = JSON.parse(content);
-          saveData();
-          renderPatients();
-          alert("Маълумот бомуваффақият бор карда шуд!");
-        } catch (err) {
-          alert("Хатогӣ дар файли боршуда!");
-        }
-      }
-    }
-    input.click();
-  }
+const DATA=[["101", "Шахсоне, ки бо мубталоёни ВНМО/БПНМ дар алоқаву тамос буданд, (аз руи нишондодхои эпидемиолги) аз ҷумла:", "Глобали"], ["101.1", "алоқаи ҷинсӣ", "Глобали"], ["101.2", "истифодаи якҷояи маводи нашъадори тазриқӣ", "Глобали"], ["101.3", "тамоси тиббӣ", "Глобали"], ["101.4", "кӯдакони аз модарони мубталои ВНМО таваллудшуда", "Глобали"], ["101.5", "Алоқамандони (волидайн, бародарон, хоҳарон ва ғ.) кӯдакони сироятёфта", "Глобали"], ["102", "Нашъамандони тазриқӣ", "Глобали"], ["103", "Гомо ва биссексуалҳо", "Глобали"], ["104", "Шахсоне, ки ба бемориҳои ҷинсӣ гирифторанд", "Глобали"], ["105", "Шахсони ба алоқаи ҷинсии бетартибона машғулбуда, аз ҷумла:", "Глобали"], ["105.1", "кормандони тиҷорати шаҳвонӣ", "Глобали"], ["105.2", "мизоҷони кормандони тиҷорати шаҳвонӣ", "Глобали"], ["106", "Муҳоҷирони меҳнатӣ, аз ҷумла шахсоне, ки зиёда аз 3 моҳ ба хориҷи кишвар сафар кардаанд", "Глобали"], ["107", "Муоинаи тиббии ҳатмии шахсони никоҳшаванда", "Глобали"], ["108", "Донорони хун, зардоби хун ва дигар моеъҳои биологию бофтаҳо", "глобали"], ["109", "ҳомиладорон, аз ҷумла:", "РОЙГОН"], ["109.1", "заноне, ки якум маротиба аз ташхис гузаштаанд", "РОЙГОН"], ["109.2", "заноне, ки тибқи шкала дуюм бор аз ташхис гузаштаанд", "РОЙГОН"], ["110", "Ресипиентҳои хун, зардоби он ва дигар моеъҳои биологию бофтаҳо", "Глобали"], ["111", "Кормандони мақомоти қудратӣ ва ба хизмат даъватшудагон", "Глобали"], ["112", "Шахсоне, ки дар маҳбасхонаҳо муоина шудаанд", "Глобали"], ["113", "Шахсони аз рўи нишонаҳои клиникӣ муоинашуда, аз ҷумла:", "К 600"], ["113.1", "таби сабабаш номаълум", "К 600"], ["113.2", "дарунравии сабабаш номаълум", "К 600"], ["113.3", "калоншавии хаҷми ғадудҳои лимфатикии ду ва аз он зиёд гурӯҳҳо бо давомнокии зиёда аз 1 моҳ", "К 600"], ["113.4", "илтихоби шуши дарозмуддат ва авҷгиранда, тарбоди музмини бронхои бо табобати оддӣ сиҳатнашаванда", "К 600"], ["113.5", "лейкоплакияи мӯйинагии ковокии даҳон", "К 600"], ["113.6", "илтихоби авҷгирандаи римноки пӯст", "К 600"], ["113.7", "бемориҳои римноки бактериалии авҷгиранда, бемориҳои паразитарӣ, таафуни хусусияти давомнокдошта, ки бо табобати оддӣ сиҳат намешаванд", "К 600"], ["113.8", "энсефалитҳои зершадид ва ноқисулақлӣ дар одамони пештар солимбуда", "К 600"], ["113.9", "саркомаи Капоши (саратон)", "К 600"], ["113.10", "лимфомаи мағзи сар", "К 600"], ["113.11", "сили шуш ва ғайришушӣ", "Глобали"], ["113.12", "зардпарвини С.", "Глобали"], ["113.13", "зардпарвини В, HBs-ҳомилон ҳангоми гузоштани ташхис ва баъди 6 моҳ", "Глобали"], ["113.14", "сироятҳои ситомегаловирусӣ", "К 600"], ["113.15", "шакли музмин ва ё паҳнгардидаи сироят, ки аз вируси оддии герпес ба вуҷуд омадааст", "К 600"], ["113.16", "шукуфаи канорпеч дар шахсони то синни 60 сола", "К 600"], ["113.17", "мононуклеоз - 3 моҳ баъд аз оғози беморӣ", "К 600"], ["113.18", "менингоэнсефалити шадиди асептикӣ", "К 600"], ["113.19", "гулафшони шадиди тромбоситопении сабабаш номаълум", "К 600"], ["113.20", "пневмосистоз (илтиҳоби шушҳо)", "К 600"], ["113.21", "токсоплазмоз", "К 600"], ["113.22", "кандидози сурхрӯда, хирной, бронхҳо ё шушҳо, пардаҳои луобии ковокии даҳону бинӣ ва узвҳои таносул", "К 600"], ["113.23", "микозҳои чуқур (гистоплазмоз, стронгилоидоз)", "К 600"], ["113.24", "лейкоэнсефалопатияи авҷгирандаи бисёрманба", "К 600"], ["113.25", "кам шудани вазн дар хаҷми 10% ва зиёд сабабаш номаълум", "К 600"], ["113.26", "беморон бо лейкопения, лимфопения, тромбоситопения", "К 600"], ["113.27", "бемороне, ки бояд ҷарроҳӣ шаванд", "К 600"], ["114", "Шахсони ба таври махфӣ муоинашуда", "К 600"], ["117", "Кӯдакони аз рӯи нишондодҳои клиникӣ муоинашуда", "К 600"], ["118", "Одамони бе ҷои зисти доимӣ", "К 600"], ["119", "Кормандони роҳи оҳан, меҳмонхонаҳо ва ронандагони сафарҳои байнишаҳрӣ", "К 600"], ["120", "Кормандони соҳаи тиб", "ИФА"], ["121", "Хонандагони мактабхои миёнаву оли", "К 600"], ["122", "Худ Мурочиат", "К 600"]];
+let active='all';
+const q=document.getElementById('q');
+const list=document.getElementById('list');
+function render(){
+ const s=q.value.trim().toLowerCase(); let n=0;
+ [...list.children].forEach((el,i)=>{
+   const d=DATA[i];
+   const ok=(!s || el.dataset.search.includes(s)) && (active==='all' || el.classList.contains(active));
+   el.style.display=ok?'grid':'none'; if(ok)n++;
+ });
+ document.getElementById('num').textContent=n;
+ document.getElementById('empty').style.display=n?'none':'block';
+}
+function showCode(code){
+ const d=DATA.find(x=>x[0]===code);
+ const r=document.getElementById('result');
+ r.style.display='block';
+ r.innerHTML='<div class="code">'+d[0]+'</div><div class="desc">'+d[1]+'</div><span class="badge">Дафтар: '+d[2]+'</span>';
+ r.scrollIntoView({behavior:'smooth',block:'start'});
+}
+q.addEventListener('input',render);
+q.addEventListener('keydown',e=>{if(e.key==='Enter')render()});
+document.getElementById('go').onclick=render;
+document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));
+ b.classList.add('active'); active=b.dataset.f; render();
+});
 </script>
-
 </body>
 </html>
